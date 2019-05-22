@@ -14,7 +14,7 @@ public List<OvChipkaart> findAll() throws SQLException {
 		
 		Connection conn = super.getConnection();
 		
-		String getOVChipkaarten = "select kaartnummer, geldigtot, klasse, saldo, reiziger.reizigerid, voorletters, tussenvoegsel, achternaam, geboortedatum from ov_chipkaart, reiziger where ov_chipkaart.reizigerid = reiziger.reizigerid";
+		String getOVChipkaarten = "select * from ov_chipkaart";
 		
 		PreparedStatement pstmt1 = conn.prepareStatement(getOVChipkaarten);
 		
@@ -24,30 +24,25 @@ public List<OvChipkaart> findAll() throws SQLException {
 		Date geldigtot;
 		int klasse;
 		double saldo;
-		
-		int reizigerid;
-		String voorletters;
-		String tussenvoegsel;
-		String achternaam;
-		Date geboortedatum;
+	
+
 		
 		List<OvChipkaart> OVChipkaarten = new ArrayList<>();
 		
 		while(rs.next()) {
+			ReizigerDao reiziger = new ReizigerDaoImpl();
+			Reiziger r1 = reiziger.getById(rs.getInt("reizigerid"));
+			
 			
 			kaartnummer = rs.getInt("kaartnummer");
 			geldigtot = rs.getDate("geldigtot");
 			klasse = rs.getInt("klasse");
 			saldo = rs.getDouble("saldo");
+		
+		
 			
-			reizigerid = rs.getInt("reizigerid");
-			voorletters = rs.getString("voorletters");
-			tussenvoegsel = rs.getString("tussenvoegsel");
-			achternaam = rs.getString("achternaam");
-			geboortedatum = rs.getDate("geboortedatum");
 			
-			Reiziger r = new Reiziger(reizigerid, voorletters, tussenvoegsel, achternaam, geboortedatum);
-			OvChipkaart o = new OvChipkaart(kaartnummer, geldigtot, klasse, saldo, r);
+			OvChipkaart o = new OvChipkaart(kaartnummer, geldigtot, klasse, saldo, r1);
 			OVChipkaarten.add(o);
 			
 		}
@@ -56,15 +51,15 @@ public List<OvChipkaart> findAll() throws SQLException {
 		
 	}
 
-public List<OvChipkaart> findByReiziger(Reiziger reiziger) throws SQLException {
+public List<OvChipkaart> findByReiziger(int reizigerid) throws SQLException {
 	
 	Connection conn = super.getConnection();
 	
-	String getOVChipkaartenByReiziger = "select kaartnummer, geldigtot, klasse, saldo from ov_chipkaart, reiziger where ov_chipkaart.REIZIGERID = reiziger.reizigerid and reiziger.reizigerid = ?";
+	String getOVChipkaartenByReiziger = "select kaartnummer, geldigtot, klasse, saldo, reizigerid from ov_chipkaart where REIZIGERID  = ?";
 	
 	PreparedStatement pstmt1 = conn.prepareStatement(getOVChipkaartenByReiziger);
 	
-	pstmt1.setInt(1, reiziger.getReizigerID());
+	pstmt1.setInt(1, reizigerid);
 	
 	ResultSet rs = pstmt1.executeQuery();
 	
@@ -72,17 +67,21 @@ public List<OvChipkaart> findByReiziger(Reiziger reiziger) throws SQLException {
 	Date geldigtot;
 	int klasse;
 	double saldo;
+	int reiziger_id;
 	
 	List<OvChipkaart> OVChipkaarten = new ArrayList<>();
 	
 	while(rs.next()) {
+		ReizigerDao reiziger = new ReizigerDaoImpl();
+		Reiziger r1 = reiziger.getById(rs.getInt("reizigerid"));
 		
 		kaartnummer = rs.getInt("kaartnummer");
 		geldigtot = rs.getDate("geldigtot");
 		klasse = rs.getInt("klasse");
 		saldo = rs.getDouble("saldo");
+		reiziger_id = rs.getInt("REIZIGERID");
 		
-		OvChipkaart o = new OvChipkaart(kaartnummer, geldigtot, klasse, saldo, reiziger);
+		OvChipkaart o = new OvChipkaart(kaartnummer, geldigtot, klasse, saldo,reiziger_id,r1);
 		OVChipkaarten.add(o);
 		
 	}

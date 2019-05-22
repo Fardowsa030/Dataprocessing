@@ -9,6 +9,7 @@ public class OvChipkaart {
 	private int klasse;
 	private double saldo;
 	private Reiziger reiziger;
+	private int reizigerid;
 	
 	public OvChipkaart(int kaartNummer, Date geldigTot, int klasse, double saldo, Reiziger reiziger) {
 		
@@ -19,6 +20,30 @@ public class OvChipkaart {
 		this.reiziger = reiziger;
 		
 	}
+public OvChipkaart(int kaartNummer, Date geldigTot, int klasse, double saldo, int reizigerid) {
+		
+		this.kaartNummer = kaartNummer;
+		this.geldigTot = geldigTot;
+		this.klasse = klasse;
+		this.saldo = saldo;
+		this.reizigerid = reizigerid;
+		
+	}
+	
+
+	public OvChipkaart(int kaartNummer, Date geldigTot, int klasse, double saldo,int reizigerid,Reiziger reiziger) {
+		this.kaartNummer = kaartNummer;
+		this.geldigTot = geldigTot;
+		this.klasse = klasse;
+		this.saldo = saldo;
+		this.reizigerid = reizigerid;
+		this.reiziger = reiziger;
+	}
+
+
+
+	
+
 
 	public int getKaartNummer() {
 		return kaartNummer;
@@ -60,11 +85,31 @@ public class OvChipkaart {
 		this.reiziger = reiziger;
 	}
 
+	public int getReizigerid() {
+		return reizigerid;
+	}
+
+
+	public void setReizigerid(int reizigerid) {
+		this.reizigerid = reizigerid;
+	}
+
+
 	@Override
 	public String toString() {
 		return "OvChipkaart [kaartNummer=" + kaartNummer + ", geldigTot=" + geldigTot + ", klasse=" + klasse
-				+ ", saldo=" + saldo + ", reiziger=" + reiziger + "]";
+				+ ", saldo=" + saldo + ", reiziger=" + reiziger + ", reizigerid=" + reizigerid + "]";
 	}
+
+
+	
+
+
+
+	
+
+
+	
 	
 
 

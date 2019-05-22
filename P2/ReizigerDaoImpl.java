@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
+
 public class ReizigerDaoImpl extends OracleBaseDao implements ReizigerDao {
 	
 public List<Reiziger> findAll() throws SQLException {
@@ -30,7 +32,10 @@ public List<Reiziger> findAll() throws SQLException {
 		
 		List<Reiziger> reizigers = new ArrayList<>();
 		
-		while (rs.next()) {   
+		while (rs.next()) { 
+			
+			ovChipkaartDao OV = new OvChipkaartDaoImpl();
+			List<OvChipkaart> ov1 = OV.findByReiziger(rs.getInt("reizigerid"));
 			
 			id = rs.getInt("reizigerid");
 			voorletters = rs.getString("voorletters");
@@ -38,11 +43,9 @@ public List<Reiziger> findAll() throws SQLException {
 			achternaam = rs.getString("achternaam");
 			geboortedatum = rs.getDate("geboortedatum");
 			
-			Reiziger r = new Reiziger(id, voorletters, tussenvoegsels, achternaam, geboortedatum);
+			Reiziger r = new Reiziger(id, voorletters, tussenvoegsels, achternaam, geboortedatum,ov1);
 			reizigers.add(r);
 	
-			
-			
 		}
 		
 		return reizigers;
@@ -70,6 +73,8 @@ public List<Reiziger> findByGBdatum(String GBdatum) throws SQLException {
 	List<Reiziger> reizigers = new ArrayList<>();
 	
 	while (rs.next()) {   
+		ovChipkaartDao OV = new OvChipkaartDaoImpl();
+		List<OvChipkaart> ov1 = OV.findByReiziger(rs.getInt("reizigerid"));
 		
 		id = rs.getInt("reizigerid");
 		voorletters = rs.getString("voorletters");
@@ -77,7 +82,7 @@ public List<Reiziger> findByGBdatum(String GBdatum) throws SQLException {
 		achternaam = rs.getString("achternaam");
 		geboortedatum = rs.getDate("geboortedatum");
 		
-		Reiziger r = new Reiziger(id, voorletters, tussenvoegsels, achternaam, geboortedatum);
+		Reiziger r = new Reiziger(id, voorletters, tussenvoegsels, achternaam, geboortedatum,ov1);
 		reizigers.add(r);
 
 		
@@ -153,6 +158,42 @@ public boolean delete(Reiziger reiziger) throws SQLException {
 @Override
 public void closeConnection(Connection conn) throws SQLException {
 	conn.close();
+	
+}
+
+@Override
+public Reiziger getById(int reizigerID) throws SQLException {
+Connection conn = super.getConnection();
+	
+	String getReizigers = "select * from reiziger where reizigerid = ?";
+	
+	PreparedStatement pstmt1 = conn.prepareStatement(getReizigers);
+	
+	pstmt1.setInt(1, reizigerID);
+	
+	ResultSet rs = pstmt1.executeQuery();
+	
+	int id;
+	String voorletters;
+	String tussenvoegsels;
+	String achternaam;
+	Date geboortedatum;
+	
+	Reiziger reiziger = null;
+	
+	while (rs.next()) {   
+		
+		id = rs.getInt("reizigerid");
+		voorletters = rs.getString("voorletters");
+		tussenvoegsels = rs.getString("tussenvoegsel");
+		achternaam = rs.getString("achternaam");
+		geboortedatum = rs.getDate("geboortedatum");
+		
+		reiziger = new Reiziger(id, voorletters, tussenvoegsels, achternaam, geboortedatum);
+	
+	}
+	
+	return reiziger;
 	
 };
 
