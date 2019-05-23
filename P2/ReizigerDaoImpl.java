@@ -144,16 +144,23 @@ public Reiziger save(Reiziger reiziger) throws SQLException {
 
 public boolean delete(Reiziger reiziger) throws SQLException {
 	Connection c = super.getConnection();
-    PreparedStatement pstmt1 = c.prepareStatement("DELETE FROM reiziger WHERE reizigerid=?");
+    boolean result;
+    @SuppressWarnings("unused")
+	boolean result1;
+    PreparedStatement pstmt1 = c.prepareStatement("DELETE FROM ov_chipkaart WHERE reizigerid=?");
+    PreparedStatement pstmt2 = c.prepareStatement("DELETE FROM reiziger WHERE reizigerid=?");
     pstmt1.setInt(1, reiziger.getReizigerID());
-    int result = pstmt1.executeUpdate();
-    if(result > 0) {
-    	return true;
-    }
-    
-    return false;
+    pstmt2.setInt(1, reiziger.getReizigerID());
+    result = pstmt1.executeUpdate() > 0;
+    result1 = pstmt2.executeUpdate() > 0;
+    c.close();
+    return result;
+
+   
 	
 }
+
+
 
 @Override
 public void closeConnection(Connection conn) throws SQLException {

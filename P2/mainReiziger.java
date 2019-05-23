@@ -1,5 +1,6 @@
 package P2;
 
+import java.sql.Date;
 import java.sql.SQLException;
 
 public class mainReiziger {
@@ -8,7 +9,7 @@ public class mainReiziger {
 		
 
 		ReizigerDao rDao = new ReizigerDaoImpl();
-		
+		/*
 		// reiziger - findAll / haal reizigers op met attribuut ovchipkaart gevuld
 		
 		for (Reiziger r : rDao.findAll()) {
@@ -40,11 +41,12 @@ public class mainReiziger {
            reiziger.setAchternaam("windsor");
            rDao.update(reiziger);
            System.out.println("na verandering: "+ reiziger.getAchternaam());
-        
+        */
          // CRUD -DELETE
+           Reiziger reiziger = new Reiziger(1, "F", "Ali", "Harry", Date.valueOf("1996-03-02"));
            rDao.delete(reiziger);
            
-        */
+        
 
 
 }
