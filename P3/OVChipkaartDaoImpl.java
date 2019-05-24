@@ -81,7 +81,7 @@ public List<Integer> getOVChipkaartNummersByProduct(int productnummer) throws SQ
 	
 	Connection conn = super.getConnection();
 	
-	String getOVChipkaarten = "select ov_chipkaart.kaartnummer from ov_chipkaart, ov_chipkaart_product, product where ov_chipkaart.kaartnummer = ov_chipkaart_product.kaartnummer and ov_chipkaart_product.productnummer = product.productnummer and product.productnummer = ?";
+	String getOVChipkaarten = "select kaartnummer from OV_CHIPKAART_PRODUCT where productnummer = ?";
 	
 	PreparedStatement pstmt1 = conn.prepareStatement(getOVChipkaarten);
 	pstmt1.setInt(1, productnummer);

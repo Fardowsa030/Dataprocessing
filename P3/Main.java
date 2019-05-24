@@ -7,7 +7,7 @@ public class Main {
 	public static void main(String[] args) throws SQLException {
 		
        OVChipkaartDao ovDao = new OVChipkaartDaoImpl();
-		/*
+	
 		OVChipkaart ov = ovDao.getKaart(35283);
 		
 		for (Product p : ov.getProducten()) {
@@ -22,7 +22,7 @@ public class Main {
 			
 			System.out.println();
 		}
-		*/
+		
 		System.out.println();
 		System.out.println();
 		
