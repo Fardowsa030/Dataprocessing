@@ -141,15 +141,11 @@ public boolean delete(OvChipkaart ovchipkaart) throws SQLException {
 	
 	Connection conn = super.getConnection();
 	
-	String deleteOVChipkaart = "delete from ov_chipkaart where kaartnummer = ? and geldigtot = ? and klasse = ? and saldo = ? and reizigerid = ?";
+	String deleteOVChipkaart = "delete * from ov_chipkaart where  reizigerid = ?";
 	
 	PreparedStatement pstmt1 = conn.prepareStatement(deleteOVChipkaart);
-	
-	pstmt1.setInt(1, ovchipkaart.getKaartNummer());
-	pstmt1.setDate(2, ovchipkaart.getGeldigTot());
-	pstmt1.setInt(3, ovchipkaart.getKlasse());
-	pstmt1.setDouble(4, ovchipkaart.getSaldo());
-	pstmt1.setInt(5, ovchipkaart.getReiziger().getReizigerID());
+
+	pstmt1.setInt(1, ovchipkaart.getReiziger().getReizigerID());
 	
 	if (pstmt1.executeUpdate() > 0) {
 			
@@ -163,6 +159,34 @@ public void closeConnection(Connection conn) throws SQLException {
 	
 	conn.close();
 }
+
+
+
+
+@Override
+public boolean delete(List<OvChipkaart> ovchipkaart) throws SQLException {
+Connection conn = super.getConnection();
+	
+    for(OvChipkaart ov: ovchipkaart) {
+    	String deleteOVChipkaart = "delete from ov_chipkaart where kaartnummer = ?";	
+    	PreparedStatement pstmt1 = conn.prepareStatement(deleteOVChipkaart);
+    	pstmt1.setInt(1, ov.getKaartNummer());
+    	if (pstmt1.executeUpdate() <= 0) {
+			return false;
+    	
+    	}
+    	
+    }
+    
+    
+	
+	
+	
+	
+	return true;
+	
+}
+
 
 }
 

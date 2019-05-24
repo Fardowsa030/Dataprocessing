@@ -142,6 +142,8 @@ public Reiziger save(Reiziger reiziger) throws SQLException {
 	
 }
 
+/*
+
 public boolean delete(Reiziger reiziger) throws SQLException {
 	Connection c = super.getConnection();
     boolean result;
@@ -159,6 +161,29 @@ public boolean delete(Reiziger reiziger) throws SQLException {
    
 	
 }
+*/
+
+public boolean delete(Reiziger reiziger)throws SQLException {
+	Connection conn = super.getConnection();
+	ovChipkaartDao ovDao = new OvChipkaartDaoImpl();
+	ovDao.delete(ovDao.findByReiziger(reiziger.getReizigerID()));
+    boolean success = false;
+   
+    PreparedStatement stmt = conn.prepareStatement("DELETE FROM reiziger WHERE reizigerid=?");
+    stmt.setInt(1, reiziger.getReizigerID());
+
+        if(stmt.executeUpdate() > 0) {
+            success = true;
+           
+        }
+       
+
+        return success;
+
+}
+
+
+
 
 
 
