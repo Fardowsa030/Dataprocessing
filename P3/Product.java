@@ -63,6 +63,12 @@ public class Product {
 		this.ovchipkaarten = ovchipkaarten;
 		
 	}
+
+	@Override
+	public String toString() {
+		return "Product [productNummer=" + productNummer + ", productNaam=" + productNaam + ", beschrijving="
+				+ beschrijving + ", prijs=" + prijs + "]";
+	}
 	
 }
 

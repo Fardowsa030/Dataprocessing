@@ -8,7 +8,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OVChipkaartDaoImpl extends OracleBaseDao implements OVChipkaartDao {
+import P2.OvChipkaart;
+import P3.OVChipkaart;
+import P3.Reiziger;
+import P3.ReizigerDao;
+import P3.ReizigerDaoImpl;
+
+public class OVChipkaartDaoImpl extends OracleBaseDao implements OVChipkaartDao{
 	
 	public List<Integer> getAlleKaartnummers() throws SQLException {
 		
@@ -57,13 +63,17 @@ public OVChipkaart getKaart(int kaartnummer) throws SQLException {
 		
 		while (rs.next()) {
 			
+			ReizigerDaoImpl rDaoImpl = new ReizigerDaoImpl();
+			
 			kn = rs.getInt("kaartnummer");
 			geldigtot = rs.getDate("geldigtot");
 			klasse = rs.getInt("klasse");
 			saldo = rs.getDouble("saldo");
 			reizigerid = rs.getInt("reizigerid");
+			Reiziger reiziger = rDaoImpl.getById(reizigerid);
 			
-			OVChipkaart o = new OVChipkaart(kn, geldigtot, klasse, saldo, reizigerid);
+
+			OVChipkaart o = new OVChipkaart(kn,geldigtot, klasse, saldo, reiziger);
 			
 			ProductDaoImpl pDaoImpl = new ProductDaoImpl();
 			
@@ -103,6 +113,164 @@ public List<Integer> getOVChipkaartNummersByProduct(int productnummer) throws SQ
 	return kaartnummers;
 	
 }
+
+public List<OVChipkaart> findAll() throws SQLException {
+	
+	Connection conn = super.getConnection();
+	
+	String getOVChipkaarten = "select * from ov_chipkaart";
+	
+	PreparedStatement pstmt1 = conn.prepareStatement(getOVChipkaarten);
+	
+	ResultSet rs = pstmt1.executeQuery();
+	
+	int kaartnummer;
+	Date geldigtot;
+	int klasse;
+	double saldo;
+
+
+	
+	List<OVChipkaart> OVChipkaarten = new ArrayList<>();
+	
+	while(rs.next()) {
+		ReizigerDao reiziger = new ReizigerDaoImpl();
+		Reiziger r1 = reiziger.getById(rs.getInt("reizigerid"));
+		
+		
+		kaartnummer = rs.getInt("kaartnummer");
+		geldigtot = rs.getDate("geldigtot");
+		klasse = rs.getInt("klasse");
+		saldo = rs.getDouble("saldo");
+	
+	
+		
+		
+		OVChipkaart o = new OVChipkaart(kaartnummer, geldigtot, klasse, saldo, r1);
+		OVChipkaarten.add(o);
+		
+	}
+	
+	return OVChipkaarten;
+	
+}
+
+public List<OVChipkaart> findByReiziger(int reizigerid) throws SQLException {
+
+
+
+		String getOVChipkaartenByReiziger = "select kaartnummer, geldigtot, klasse, saldo, reizigerid from ov_chipkaart where REIZIGERID  = ?";
+		
+		PreparedStatement pstmt1 = conn.prepareStatement(getOVChipkaartenByReiziger);
+		
+		pstmt1.setInt(1, reizigerid);
+		
+		ResultSet rs = pstmt1.executeQuery();
+		
+		int kaartnummer;
+		Date geldigtot;
+		int klasse;
+		double saldo;
+		int reiziger_id;
+		
+		List<OVChipkaart> OVChipkaarten = new ArrayList<>();
+		
+		while(rs.next()) {
+			ReizigerDao reiziger = new ReizigerDaoImpl();
+			Reiziger r1 = reiziger.getById(rs.getInt("reizigerid"));
+			
+			kaartnummer = rs.getInt("kaartnummer");
+			geldigtot = rs.getDate("geldigtot");
+			klasse = rs.getInt("klasse");
+			saldo = rs.getDouble("saldo");
+			reiziger_id = rs.getInt("REIZIGERID");
+			
+			OVChipkaart o = new OVChipkaart(kaartnummer, geldigtot, klasse, saldo,r1);
+			OVChipkaarten.add(o);
+			
+		}
+		
+		return OVChipkaarten;
+
+}
+
+
+public OVChipkaart save(OVChipkaart ovchipkaart) throws SQLException { 
+
+Connection conn = super.getConnection();
+
+String saveOVChipkaart = "insert into ov_chipkaart values (?, ?, ?, ?, ?)";
+
+PreparedStatement pstmt1 = conn.prepareStatement(saveOVChipkaart);
+
+pstmt1.setInt(1, ovchipkaart.getKaartNummer());
+pstmt1.setDate(2, ovchipkaart.getGeldigTot());
+pstmt1.setInt(3, ovchipkaart.getKlasse());
+pstmt1.setDouble(4, ovchipkaart.getSaldo());
+pstmt1.setInt(5, ovchipkaart.getReiziger().getReizigerID());
+
+int count = pstmt1.executeUpdate();
+
+if (count > 0) {
+	
+	return ovchipkaart;
+	
+}
+
+return null;
+
+}
+
+public OVChipkaart update(OVChipkaart ovchipkaart) throws SQLException { 
+
+Connection conn = super.getConnection();
+
+String updateOVChipkaart = "update ov_chipkaart set geldigtot = ?, klasse = ?, saldo = ? where kaartnummer = ?";
+
+PreparedStatement pstmt1 = conn.prepareStatement(updateOVChipkaart);
+
+pstmt1.setDate(1, ovchipkaart.getGeldigTot());
+pstmt1.setInt(2, ovchipkaart.getKlasse());
+pstmt1.setDouble(3, ovchipkaart.getSaldo());
+pstmt1.setInt(4, ovchipkaart.getKaartNummer());
+
+if (pstmt1.executeUpdate() > 0) {
+	
+	return ovchipkaart;	
+}
+
+return null;
+}
+
+
+public boolean delete(List<OVChipkaart> ovchipkaart) throws SQLException {
+		Connection conn = super.getConnection();
+		
+		for(OVChipkaart ov: ovchipkaart) {
+			String deleteOVChipkaart = "delete from ov_chipkaart where kaartnummer = ?";	
+			PreparedStatement pstmt1 = conn.prepareStatement(deleteOVChipkaart);
+			pstmt1.setInt(1, ov.getKaartNummer());
+			if (pstmt1.executeUpdate() <= 0) {
+				return false;
+			
+			}
+			
+		}
+
+return true;
+
+}
+
+
+public void closeConnection(Connection conn) throws SQLException {
+	conn.close();
+	
+}
+
+
+
+
+
 
 }
 

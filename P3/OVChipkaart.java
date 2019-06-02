@@ -10,16 +10,16 @@ public class OVChipkaart {
 	private Date geldigTot;
 	private int klasse;
 	private double saldo;
-	private int reizigerid;
+	private Reiziger reiziger;
 	private List<Product> producten = new ArrayList<>();
 	
-	public OVChipkaart(int kaartNummer, Date geldigTot, int klasse, double saldo, int reizigerid) {
+	public OVChipkaart(int kaartNummer, Date geldigTot, int klasse, double saldo, Reiziger reiziger) {
 		
 		this.kaartNummer = kaartNummer;
 		this.geldigTot = geldigTot;
 		this.klasse = klasse;
 		this.saldo = saldo;
-		this.reizigerid = reizigerid;
+		this.reiziger = reiziger;
 		
 	}
 
@@ -67,17 +67,25 @@ public class OVChipkaart {
 		
 	}
 	
-	public int getReizigerid() {
+	public Reiziger getReiziger() {
 		
-		return reizigerid;
+		return reiziger;
 		
 	}
 	
-	public void setReizigerid(int reizigerid) {
+	public void setReiziger(Reiziger reiziger) {
 		
-		this.reizigerid = reizigerid;
+		this.reiziger = reiziger;
 		
 	}
+
+	@Override
+	public String toString() {
+		return "OVChipkaart [kaartNummer=" + kaartNummer + ", geldigTot=" + geldigTot + ", klasse=" + klasse
+				+ ", saldo=" + saldo + ", reiziger=" + reiziger + ", producten=" + producten + "]";
+	}
+	
+	
 	
 }
 
