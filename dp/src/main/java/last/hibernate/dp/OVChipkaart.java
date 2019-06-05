@@ -8,18 +8,17 @@ import java.sql.Date;
 @Entity
 @Table(name = "ovchipkaart")
 public class OVChipkaart {
-
+    
     @Id
-   // @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "kaart_Sequence")
-   // @SequenceGenerator(name = "kaart_Sequence", sequenceName = "KAART_SEQ")
+    @GeneratedValue
     private int kaartnr;
     private Date geldigheid;
     private String kaartopdruk;
     
-    @ManyToOne
-    @JoinColumn(name = "REIZIGER_REIZIGERID", referencedColumnName = "REIZIGERID")
-
-	private Reiziger reiziger;
+   
+    @ManyToOne(targetEntity = Reiziger.class, cascade = CascadeType.ALL)	
+    @JoinColumn(name = "REIZIGER_REIZIGERID")
+    private Reiziger reiziger;
    
     public OVChipkaart(int kaartnr, Date geldigheid, String kaartopdruk, Reiziger reiziger) {
     	this.kaartnr = kaartnr;
