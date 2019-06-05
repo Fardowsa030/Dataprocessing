@@ -24,7 +24,7 @@ public class Reiziger {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-	List<Reiziger> reizigers = new ArrayList<>();
+	List<OVChipkaart> ov = new ArrayList<OVChipkaart>();
 	
 
 
@@ -32,12 +32,14 @@ public class Reiziger {
 		
 	}
 	
-	public Reiziger(int reizigerid, String voorletters, String tussenvoegsel, String achternaam, Date geboortedatum) {
+	public Reiziger(int reizigerid, String voorletters, String tussenvoegsel, String achternaam, Date geboortedatum,
+			List<OVChipkaart> ov) {
 		this.reizigerid = reizigerid;
 		this.voorletters = voorletters;
 		this.tussenvoegsel = tussenvoegsel;
 		this.achternaam = achternaam;
 		this.geboortedatum = geboortedatum;
+		this.ov = ov;
 	}
 	
 	public String getVoorletters() {
@@ -72,16 +74,22 @@ public class Reiziger {
 	public void setGeboortedatum(Date geboortedatum) {
 		this.geboortedatum = geboortedatum;
 	}
-	
-	public String toString() {
-		return "Reiziger{" +
-                "reizgierid=" + reizigerid +
-                ", voorletters=" + voorletters +
-                ", tussenvoegsel=" + tussenvoegsel +
-                ", achternaam=" + achternaam +
-                ", geboortedatum='" + geboortedatum + '\'' +
-                '}';
+	public List<OVChipkaart> getOv() {
+		return ov;
 	}
+
+	public void setOv(List<OVChipkaart> ov) {
+		this.ov = ov;
+	}
+
+	@Override
+	public String toString() {
+		return "Reiziger [reizigerid=" + reizigerid + ", voorletters=" + voorletters + ", tussenvoegsel="
+				+ tussenvoegsel + ", achternaam=" + achternaam + ", geboortedatum=" + geboortedatum + ", ov=" + ov
+				+ "]";
+	}
+	
+	
 	
 	
 }
