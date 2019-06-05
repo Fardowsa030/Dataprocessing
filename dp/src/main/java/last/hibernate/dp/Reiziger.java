@@ -7,19 +7,24 @@ import java.util.Collection;
 import javax.persistence.*;
 
 
-@Entity
-@Table(name = "reiziger")
+@Entity(name = "Reiziger")
+@Table(name = "REIZIGER")
+
 public class Reiziger {
-	
 	@Id
-   // @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "reiziger_Sequence")
-   // @SequenceGenerator(name = "reiziger_Sequence", sequenceName = "REIZIGER_SEQ")
+        @GeneratedValue
 	private int reizigerid;
 	
 	private String voorletters;
 	private String tussenvoegsel;
 	private String achternaam;
 	private Date geboortedatum;
+	
+	@OneToMany(
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+	List<Reiziger> reizigers = new ArrayList<>();
 	
 
 
