@@ -28,6 +28,7 @@ public class Main {
 		
 		
 		ProductDao pDao = new ProductDaoImpl();
+		Product p = pDao.getProduct(1);
 		
 		for (Integer k : ovDao.getAlleKaartnummers()) {
 			
@@ -41,6 +42,26 @@ public class Main {
 			
 			System.out.println();
 			
+		}
+		
+		/*
+		if(pDao.saveKoppel(p, ov)) {
+			System.out.println("true");
+		}
+		*/
+		
+		/*
+		
+		if(pDao.delete(p)) {
+			System.out.println("true");
+		}
+		*/
+		
+		p.setProductNummer(3);
+		
+		if(pDao.update(p)) {
+			System.out.println("true");
+		
 		}
 		
 		

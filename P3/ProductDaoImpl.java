@@ -137,20 +137,61 @@ public boolean save(Product product) throws SQLException {
 }
 
 
+public boolean saveKoppel(Product product,OVChipkaart ov) throws SQLException {
+	String saveProduct = "insert into ov_chipkaart_product values (?, ?, ?, ?,?)";
+	PreparedStatement pstmt1 = conn.prepareStatement(saveProduct);
+	pstmt1.setInt(1, 17);
+	pstmt1.setInt(2, ov.getKaartNummer());
+	pstmt1.setInt(3, product.getProductNummer());
+	pstmt1.setString(4, "actief");
+	pstmt1.setString(5, "03-02-1996");
+	int count = pstmt1.executeUpdate();
+    
+	if (count > 0) {
+		
+		return true;
+		
+	}
+
+	
+	return false;
+}
+
 
 public boolean delete(Product product)throws SQLException {
-	ProductOvchipkaartDao opDao = new ProductOvDaoImpl();
-	opDao.delete(opDao.findByProduct_OV(product.getProductNummer()));
+
     boolean success = false;
    
-    PreparedStatement stmt = conn.prepareStatement("DELETE FROM product WHERE productnummer=?");
+    PreparedStatement stmt = conn.prepareStatement("delete from product where productnummer = ?");
     stmt.setInt(1, product.getProductNummer());
 
         if(stmt.executeUpdate() > 0) {
             success = true;
            
         }
-       
+    
+
+        return success;
+
+}
+
+
+
+
+
+public boolean deleteKoppel(Product product)throws SQLException {
+
+    boolean success = false;
+   
+    PreparedStatement stmt = conn.prepareStatement("delete from ov_chipkaart_product where productnummer = ?");
+    stmt.setInt(1, product.getProductNummer());
+    
+
+        if(stmt.executeUpdate() > 0) {
+            success = true;
+           
+        }
+    
 
         return success;
 
@@ -178,6 +219,8 @@ public boolean update(Product product) throws SQLException {
 	
 	return false;
 }
+
+
 
 
 

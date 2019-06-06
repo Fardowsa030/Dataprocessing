@@ -261,10 +261,49 @@ return true;
 
 }
 
+public boolean deleteKoppel(OVChipkaart ov)throws SQLException {
+
+    boolean success = false;
+   
+    PreparedStatement stmt = conn.prepareStatement("delete * from ov_chipkaart_product where kaartnummer = ?");
+    stmt.setInt(1, ov.getKaartNummer());
+    
+
+        if(stmt.executeUpdate() > 0) {
+            success = true;
+           
+        }
+    
+
+        return success;
+
+}
+
+
 
 public void closeConnection(Connection conn) throws SQLException {
 	conn.close();
 	
+}
+
+public boolean saveKoppel(Product product,OVChipkaart ov) throws SQLException {
+	String saveProduct = "insert into ov_chipkaart_product values (?, ?, ?, ?,?)";
+	PreparedStatement pstmt1 = conn.prepareStatement(saveProduct);
+	pstmt1.setInt(1, 16);
+	pstmt1.setInt(2, ov.getKaartNummer());
+	pstmt1.setInt(3, product.getProductNummer());
+	pstmt1.setString(4, "actief");
+	pstmt1.setString(5, "03-02-1996");
+	int count = pstmt1.executeUpdate();
+    
+	if (count > 0) {
+		
+		return true;
+		
+	}
+
+	
+	return false;
 }
 
 

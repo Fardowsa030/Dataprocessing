@@ -148,9 +148,6 @@ public Reiziger save(Reiziger reiziger) throws SQLException {
 
 
 
-
-
-
 public boolean delete(Reiziger reiziger)throws SQLException {
 	Connection conn = super.getConnection();
 	OVChipkaartDao ovDao = new OVChipkaartDaoImpl();

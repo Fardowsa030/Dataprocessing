@@ -17,6 +17,8 @@ public interface OVChipkaartDao {
 	public OVChipkaart update(OVChipkaart ovchipkaart) throws SQLException;
 	public boolean delete(List<OVChipkaart> ovchipkaart) throws SQLException;
 	public void closeConnection(Connection conn) throws SQLException;
+	public boolean saveKoppel(Product product,OVChipkaart ov)throws SQLException;
+	public boolean deleteKoppel(OVChipkaart ov)throws SQLException;
 	
 
 
