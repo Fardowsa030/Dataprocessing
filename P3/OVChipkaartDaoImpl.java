@@ -195,79 +195,17 @@ public List<OVChipkaart> findByReiziger(int reizigerid) throws SQLException {
 }
 
 
-public OVChipkaart save(OVChipkaart ovchipkaart) throws SQLException { 
-
-Connection conn = super.getConnection();
-
-String saveOVChipkaart = "insert into ov_chipkaart values (?, ?, ?, ?, ?)";
-
-PreparedStatement pstmt1 = conn.prepareStatement(saveOVChipkaart);
-
-pstmt1.setInt(1, ovchipkaart.getKaartNummer());
-pstmt1.setDate(2, ovchipkaart.getGeldigTot());
-pstmt1.setInt(3, ovchipkaart.getKlasse());
-pstmt1.setDouble(4, ovchipkaart.getSaldo());
-pstmt1.setInt(5, ovchipkaart.getReiziger().getReizigerID());
-
-int count = pstmt1.executeUpdate();
-
-if (count > 0) {
-	
-	return ovchipkaart;
-	
-}
-
-return null;
-
-}
-
-public OVChipkaart update(OVChipkaart ovchipkaart) throws SQLException { 
-
-Connection conn = super.getConnection();
-
-String updateOVChipkaart = "update ov_chipkaart set geldigtot = ?, klasse = ?, saldo = ? where kaartnummer = ?";
-
-PreparedStatement pstmt1 = conn.prepareStatement(updateOVChipkaart);
-
-pstmt1.setDate(1, ovchipkaart.getGeldigTot());
-pstmt1.setInt(2, ovchipkaart.getKlasse());
-pstmt1.setDouble(3, ovchipkaart.getSaldo());
-pstmt1.setInt(4, ovchipkaart.getKaartNummer());
-
-if (pstmt1.executeUpdate() > 0) {
-	
-	return ovchipkaart;	
-}
-
-return null;
-}
 
 
-public boolean delete(List<OVChipkaart> ovchipkaart) throws SQLException {
-		Connection conn = super.getConnection();
-		
-		for(OVChipkaart ov: ovchipkaart) {
-			String deleteOVChipkaart = "delete from ov_chipkaart where kaartnummer = ?";	
-			PreparedStatement pstmt1 = conn.prepareStatement(deleteOVChipkaart);
-			pstmt1.setInt(1, ov.getKaartNummer());
-			if (pstmt1.executeUpdate() <= 0) {
-				return false;
-			
-			}
-			
-		}
 
-return true;
 
-}
 
-public boolean deleteKoppel(OVChipkaart ov)throws SQLException {
+public boolean delete(OVChipkaart ov)throws SQLException {
 
     boolean success = false;
    
-    PreparedStatement stmt = conn.prepareStatement("delete * from ov_chipkaart_product where kaartnummer = ?");
+    PreparedStatement stmt = conn.prepareStatement("delete from ov_chipkaart where kaartnummer = ?");
     stmt.setInt(1, ov.getKaartNummer());
-    
 
         if(stmt.executeUpdate() > 0) {
             success = true;
@@ -281,19 +219,42 @@ public boolean deleteKoppel(OVChipkaart ov)throws SQLException {
 
 
 
+
+
+public boolean deleteKoppel(OVChipkaart ov)throws SQLException {
+	OVChipkaartDaoImpl ovDaoImpl = new OVChipkaartDaoImpl();
+    boolean success = false;
+   
+    PreparedStatement stmt = conn.prepareStatement("delete from ov_chipkaart_product where kaartnummer = ?");
+    stmt.setInt(1, ov.getKaartNummer());
+    
+
+        if(stmt.executeUpdate() > 0) {
+            success = true;
+            ovDaoImpl.delete(ov);
+            
+           
+        }
+        
+    
+
+        return success;
+
+}
+
 public void closeConnection(Connection conn) throws SQLException {
 	conn.close();
 	
 }
 
-public boolean saveKoppel(Product product,OVChipkaart ov) throws SQLException {
-	String saveProduct = "insert into ov_chipkaart_product values (?, ?, ?, ?,?)";
-	PreparedStatement pstmt1 = conn.prepareStatement(saveProduct);
-	pstmt1.setInt(1, 16);
-	pstmt1.setInt(2, ov.getKaartNummer());
-	pstmt1.setInt(3, product.getProductNummer());
-	pstmt1.setString(4, "actief");
-	pstmt1.setString(5, "03-02-1996");
+public boolean save(OVChipkaart ov) throws SQLException {
+	String save = "insert into ov_chipkaart values (?, ?, ?, ?,?)";
+	PreparedStatement pstmt1 = conn.prepareStatement(save);
+	pstmt1.setInt(1, ov.getKaartNummer());
+	pstmt1.setDate(2, ov.getGeldigTot());
+	pstmt1.setInt(3, ov.getKlasse());
+	pstmt1.setDouble(4, ov.getSaldo());
+	pstmt1.setInt(5, ov.getReiziger().getReizigerID());
 	int count = pstmt1.executeUpdate();
     
 	if (count > 0) {
@@ -305,6 +266,103 @@ public boolean saveKoppel(Product product,OVChipkaart ov) throws SQLException {
 	
 	return false;
 }
+
+
+
+public int createUniqueID() {
+    try {
+        String queryText =  "SELECT MAX(OVPRODUCTID) + 1 as newID " +
+                "FROM OV_CHIPKAART_PRODUCT";
+
+        PreparedStatement stmt = conn.prepareStatement(queryText);
+
+        ResultSet result = stmt.executeQuery();
+
+        result.next();
+
+        int id = result.getInt("newID");
+        System.out.println(id);
+        return id;
+    }
+    catch(SQLException e) {
+        e.printStackTrace();
+        return 0;
+    }
+}
+
+public boolean saveKoppel(OVChipkaart ov) throws SQLException {
+	OVChipkaartDaoImpl ovDaoImpl = new OVChipkaartDaoImpl();
+	ovDaoImpl.save(ov);
+	List<Product> products = ov.getProducten();
+	for(Product p: products) {
+		  System.out.println(p+"---");
+	      String saveKoppel = "insert into ov_chipkaart_product values (?,?,?,?,?)";
+		  PreparedStatement pstmt2 = conn.prepareStatement(saveKoppel);
+		  pstmt2.setInt(1, ovDaoImpl.createUniqueID());
+		  pstmt2.setInt(2, ov.getKaartNummer());
+		  pstmt2.setInt(3, p.getProductNummer());
+		  pstmt2.setString(4, "actief");
+		  pstmt2.setString(5, "03-02-1996");
+		  if (pstmt2.executeUpdate() <= 0) {
+				return false;
+	    	
+	    	}
+		 
+		}
+	return true;
+	
+}
+
+public boolean update(OVChipkaart ov) throws SQLException {	
+	Connection conn = super.getConnection();
+
+	String updateOVChipkaart = "update ov_chipkaart set geldigtot = ?, klasse = ?, saldo = ? where kaartnummer = ?";
+
+	PreparedStatement pstmt1 = conn.prepareStatement(updateOVChipkaart);
+
+	pstmt1.setDate(1, ov.getGeldigTot());
+	pstmt1.setInt(2, ov.getKlasse());
+	pstmt1.setDouble(3, ov.getSaldo());
+	pstmt1.setInt(4, ov.getKaartNummer());
+
+	if (pstmt1.executeUpdate() > 0) {
+		
+		return true;	
+	}
+
+	return false;
+}
+
+public boolean updateKoppel(OVChipkaart ov) throws SQLException {	
+	OVChipkaartDaoImpl ovDaoImpl = new OVChipkaartDaoImpl();
+	ovDaoImpl.update(ov);
+	String delete = "delete from ov_chipkaart_product where kaartnummer=?";
+	PreparedStatement ps = conn.prepareStatement(delete);
+	ps.setInt(1, ov.getKaartNummer());
+    ps.executeUpdate();
+
+   
+    
+    List<Product> products = ov.getProducten();
+	for(Product p: products) {
+		  System.out.println(p);
+	      String saveKoppel = "insert into ov_chipkaart_product values (?,?,?,?,?)";
+		  PreparedStatement pstmt2 = conn.prepareStatement(saveKoppel);
+		  pstmt2.setInt(1, ovDaoImpl.createUniqueID());
+		  pstmt2.setInt(2, ov.getKaartNummer());
+		  pstmt2.setInt(3, p.getProductNummer());
+		  pstmt2.setString(4, "actief");
+		  pstmt2.setString(5, "03-02-1996");
+		  if (pstmt2.executeUpdate() <= 0) {
+				return false;
+	    	
+	    	}
+		  
+		}
+	
+	return true;
+}
+
 
 
 

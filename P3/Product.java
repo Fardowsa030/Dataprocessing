@@ -67,8 +67,10 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [productNummer=" + productNummer + ", productNaam=" + productNaam + ", beschrijving="
-				+ beschrijving + ", prijs=" + prijs + "]";
+				+ beschrijving + ", prijs=" + prijs + ", ovchipkaarten=" + ovchipkaarten + "]";
 	}
+
+	
 	
 }
 

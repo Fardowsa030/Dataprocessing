@@ -13,7 +13,7 @@ public interface ReizigerDao {
 	public Reiziger save(Reiziger reiziger) throws SQLException;
 	public Reiziger getById(int reiziger) throws SQLException;
 	public Reiziger update(Reiziger reiziger) throws SQLException;
-	public boolean delete(Reiziger reiziger) throws SQLException;
+	//public boolean delete(Reiziger reiziger) throws SQLException;
 	public void closeConnection(Connection conn) throws SQLException;
 
 }

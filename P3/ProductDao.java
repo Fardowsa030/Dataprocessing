@@ -9,10 +9,12 @@ public interface ProductDao {
 	public Product getProduct(int productnummer) throws SQLException;
 	public List<Product> findAll() throws SQLException;
 	public boolean save(Product product) throws SQLException;
-	public boolean saveKoppel(Product product,OVChipkaart ov)throws SQLException;
+	public boolean saveKoppel(Product product)throws SQLException;
 	public boolean delete(Product product)throws SQLException;
 	public boolean update(Product product) throws SQLException;
+	public boolean updateKoppel(Product product)throws SQLException;
 	public boolean deleteKoppel(Product product)throws SQLException;
+	public int createUniqueID();
 
 
 }
